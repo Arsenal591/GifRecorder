@@ -18,6 +18,9 @@ public:
 protected:
     void showEvent(QShowEvent*);
 
+private slots:
+    void on_recordButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

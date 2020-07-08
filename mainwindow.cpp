@@ -1,3 +1,5 @@
+#include "qwindow.h"
+#include "qscreen.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qdebug.h"
@@ -22,3 +24,19 @@ void MainWindow::showEvent(QShowEvent* ev) {
     this->setMask(mainRegion.subtracted(cameraRegion));
 }
 
+
+void MainWindow::on_recordButton_clicked()
+{
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (const QWindow *window = windowHandle())
+        screen = this->windowHandle()->screen();
+    if (!screen)
+    {
+        return;
+    }
+    auto cameraPos = this->mapToGlobal(ui->camera->pos());
+    auto cameraSize = ui->camera->size();
+
+    auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
+    pixmap.save("screenshot.png");
+}
