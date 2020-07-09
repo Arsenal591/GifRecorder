@@ -28,7 +28,7 @@ public:
     ~MainWindow() override;
 
 protected:
-    void showEvent(QShowEvent*) override;
+    void paintEvent(QPaintEvent*) override;
     void mouseMoveEvent(QMouseEvent*) override;
 
 private slots:

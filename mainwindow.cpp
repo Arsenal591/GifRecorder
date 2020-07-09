@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::showEvent(QShowEvent* ev) {
+void MainWindow::paintEvent(QPaintEvent* ev) {
     auto mainRegion = QRegion(this->rect());
     auto cameraSize = ui->camera->size();
     auto cameraPos = ui->camera->mapToParent(ui->camera->pos());
