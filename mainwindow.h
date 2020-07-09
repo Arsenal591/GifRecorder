@@ -20,8 +20,11 @@ protected:
 
 private slots:
     void on_recordButton_clicked();
+    void on_timer_fired();
 
 private:
     Ui::MainWindow *ui;
+    QTimer *timer;
+    QVector<QPixmap> buf;
 };
 #endif // MAINWINDOW_H

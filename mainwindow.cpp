@@ -12,7 +12,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent, Qt::WindowStaysOnTopHint)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), timer(nullptr)
 {
     ui->setupUi(this);
 }
@@ -30,9 +30,7 @@ void MainWindow::showEvent(QShowEvent* ev) {
     this->setMask(mainRegion.subtracted(cameraRegion));
 }
 
-
-void MainWindow::on_recordButton_clicked()
-{
+void MainWindow::on_timer_fired() {
     QScreen *screen = QGuiApplication::primaryScreen();
     if (const QWindow *window = windowHandle())
         screen = this->windowHandle()->screen();
@@ -44,5 +42,27 @@ void MainWindow::on_recordButton_clicked()
     auto cameraSize = ui->camera->size();
 
     auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
-    pixmap.save("screenshot.png");
+    buf.push_back(pixmap);
+}
+
+
+void MainWindow::on_recordButton_clicked()
+{
+    if(timer == nullptr) {
+        timer = new QTimer(this);
+        timer->setTimerType(Qt::PreciseTimer);
+        connect(timer, &QTimer::timeout, this, &MainWindow::on_timer_fired);
+        timer->start(33);
+    } else {
+        delete timer;
+        if(buf.size()) {
+            GifWriter g;
+            int width = buf[0].width(), height = buf[0].height();
+            GifBegin(&g, "out.gif", width, height, 0);
+            for(auto& img: buf) {
+                GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), 3);
+            }
+            GifEnd(&g);
+        }
+    }
 }
