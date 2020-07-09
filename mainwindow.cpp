@@ -1,5 +1,11 @@
+#include "qdatetime.h"
+#include "qdebug.h"
+#include "qtimer.h"
 #include "qwindow.h"
 #include "qscreen.h"
+
+#include "gif.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qdebug.h"
