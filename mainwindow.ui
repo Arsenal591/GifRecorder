@@ -44,7 +44,10 @@
          <widget class="QWidget" name="camera" native="true"/>
         </item>
         <item>
-         <widget class="QWidget" name="widget" native="true">
+         <widget class="SilentWidget" name="widget" native="true">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -160,6 +163,14 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SilentWidget</class>
+   <extends>QWidget</extends>
+   <header>silentwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
