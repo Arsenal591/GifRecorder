@@ -3,6 +3,7 @@
 #include "qdir.h"
 #include "qfiledialog.h"
 #include "qimagewriter.h"
+#include "qevent.h"
 #include "qtimer.h"
 #include "qwindow.h"
 #include "qscreen.h"
@@ -18,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), timer(nullptr)
 {
     ui->setupUi(this);
+    setMouseTracking(true);
+    ui->centralwidget->setMouseTracking(true);
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +34,22 @@ void MainWindow::showEvent(QShowEvent* ev) {
     auto cameraPos = ui->camera->mapToParent(ui->camera->pos());
     auto cameraRegion = QRegion(QRect(cameraPos, cameraSize));
     this->setMask(mainRegion.subtracted(cameraRegion));
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *ev) {
+    QPoint pos = ev->pos();
+    ResizeType type = calculateCursorPosition(pos);
+    if(type == ResizeLeft || type == ResizeRight) {
+        setCursor(Qt::SizeHorCursor);
+    } else if(type == ResizeTop || type == ResizeBottom) {
+        setCursor(Qt::SizeVerCursor);
+    } else if(type == ResizeTopLeft || type == ResizeBottomRight){
+        setCursor(Qt::SizeFDiagCursor);
+    } else if(type == ResizeTopRight || type == ResizeBottomLeft) {
+        setCursor(Qt::SizeBDiagCursor);
+    } else{
+        setCursor(Qt::ArrowCursor);
+    }
 }
 
 void MainWindow::on_timer_fired() {
@@ -87,4 +106,30 @@ void MainWindow::on_saveButton_clicked()
         }
         GifEnd(&g);
     }
+}
+
+ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
+    const int r = 10;
+    bool onLeft = pos.x() <= r;
+    bool onRight = pos.x() >= this->width() - r;
+    bool onTop = pos.y() <= r;
+    bool onBottom = pos.y() >= this->height() - r;
+    if(onLeft && onTop) {
+        return ResizeTopLeft;
+    } if(onLeft && onBottom) {
+        return ResizeBottomLeft;
+    } if(onRight && onTop) {
+        return ResizeTopRight;
+    } if(onRight && onBottom){
+        return ResizeBottomRight;
+    } if(onLeft) {
+        return ResizeLeft;
+    } if(onRight) {
+        return ResizeRight;
+    } if(onTop) {
+        return ResizeTop;
+    } if(onBottom) {
+        return ResizeBottom;
+    }
+    return ResizeNone;
 }

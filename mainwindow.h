@@ -7,6 +7,18 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+enum ResizeType {
+    ResizeLeft,
+    ResizeRight,
+    ResizeTop,
+    ResizeBottom,
+    ResizeTopLeft,
+    ResizeTopRight,
+    ResizeBottomLeft,
+    ResizeBottomRight,
+    ResizeNone,
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,6 +29,7 @@ public:
 
 protected:
     void showEvent(QShowEvent*);
+    void mouseMoveEvent(QMouseEvent*);
 
 private slots:
     void on_recordButton_clicked();
@@ -28,5 +41,7 @@ private:
     Ui::MainWindow *ui;
     QTimer *timer;
     QVector<QPixmap> buf;
+
+    ResizeType calculateCursorPosition(const QPoint& pos);
 };
 #endif // MAINWINDOW_H
