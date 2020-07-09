@@ -1,9 +1,9 @@
 #include "qdatetime.h"
 #include "qdebug.h"
 #include "qdir.h"
+#include "qevent.h"
 #include "qfiledialog.h"
 #include "qimagewriter.h"
-#include "qevent.h"
 #include "qtimer.h"
 #include "qwindow.h"
 #include "qscreen.h"
@@ -16,7 +16,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent, Qt::WindowStaysOnTopHint)
-    , ui(new Ui::MainWindow), timer(nullptr)
+    , ui(new Ui::MainWindow), timer(nullptr), resizeType(ResizeNone)
 {
     ui->setupUi(this);
     setMouseTracking(true);
@@ -50,6 +50,35 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev) {
     } else{
         setCursor(Qt::ArrowCursor);
     }
+
+    if(ev->buttons() & Qt::LeftButton) {
+        auto coord = ev->globalPos();
+        auto geo = geometry(), oriGeo = geometry();
+        if(resizeType == ResizeRight || resizeType == ResizeTopRight || resizeType == ResizeBottomRight) {
+            geo.setRight(coord.x());
+        }
+        if(resizeType == ResizeLeft || resizeType == ResizeTopLeft || resizeType == ResizeBottomLeft) {
+            geo.setLeft(coord.x());
+        }
+        if(resizeType == ResizeTop || resizeType == ResizeTopLeft || resizeType == ResizeTopRight) {
+            geo.setTop(coord.y());
+        }
+        if(resizeType == ResizeBottom || resizeType == ResizeBottomLeft || resizeType == ResizeBottomRight) {
+            geo.setBottom(coord.y());
+        }
+        this->setGeometry(geo);
+    }
+
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *ev) {
+    if(ev->button() == Qt::LeftButton) {
+        resizeType = calculateCursorPosition(ev->pos());
+    }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *ev) {
+    resizeType = ResizeNone;
 }
 
 void MainWindow::on_timer_fired() {
@@ -131,5 +160,5 @@ ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
     } if(onBottom) {
         return ResizeBottom;
     }
-    return ResizeNone;
+    return ResizeDrag;
 }

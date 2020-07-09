@@ -16,6 +16,7 @@ enum ResizeType {
     ResizeTopRight,
     ResizeBottomLeft,
     ResizeBottomRight,
+    ResizeDrag,
     ResizeNone,
 };
 
@@ -30,6 +31,8 @@ public:
 protected:
     void paintEvent(QPaintEvent*) override;
     void mouseMoveEvent(QMouseEvent*) override;
+    void mousePressEvent(QMouseEvent*) override;
+    void mouseReleaseEvent(QMouseEvent*) override;
 
 private slots:
     void on_recordButton_clicked();
@@ -43,5 +46,6 @@ private:
     QVector<QPixmap> buf;
 
     ResizeType calculateCursorPosition(const QPoint& pos);
+    ResizeType resizeType;
 };
 #endif // MAINWINDOW_H
