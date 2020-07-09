@@ -24,12 +24,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
 protected:
-    void showEvent(QShowEvent*);
-    void mouseMoveEvent(QMouseEvent*);
+    void showEvent(QShowEvent*) override;
+    void mouseMoveEvent(QMouseEvent*) override;
 
 private slots:
     void on_recordButton_clicked();

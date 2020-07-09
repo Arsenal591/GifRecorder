@@ -9,9 +9,9 @@ class SilentWidget: public QWidget
 {
     Q_OBJECT
 public:
-    SilentWidget(QWidget*);
-    ~SilentWidget();
+    explicit SilentWidget(QWidget*);
+    ~SilentWidget() override;
 
 protected:
-    void mouseMoveEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event) override;
 };
