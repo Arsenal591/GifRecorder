@@ -1,14 +1,17 @@
 #include "qdatetime.h"
 #include "qdebug.h"
+#include "qdir.h"
+#include "qfiledialog.h"
+#include "qimagewriter.h"
 #include "qtimer.h"
 #include "qwindow.h"
 #include "qscreen.h"
+#include "qstandardpaths.h"
 
 #include "gif.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qdebug.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent, Qt::WindowStaysOnTopHint)
@@ -55,14 +58,33 @@ void MainWindow::on_recordButton_clicked()
         timer->start(33);
     } else {
         delete timer;
-        if(buf.size()) {
-            GifWriter g;
-            int width = buf[0].width(), height = buf[0].height();
-            GifBegin(&g, "out.gif", width, height, 0);
-            for(auto& img: buf) {
-                GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), 3);
-            }
-            GifEnd(&g);
+
+    }
+}
+
+void MainWindow::on_saveButton_clicked()
+{
+    QString initialPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+    if(initialPath.isEmpty()) {
+        initialPath = QDir::currentPath();
+    }
+    initialPath += tr("/untitled") + ".gif";
+    QFileDialog fileDialog(this, tr("Save As"), initialPath);
+    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    QStringList mimeTypes;
+    mimeTypes.append("image/gif");
+
+    fileDialog.setMimeTypeFilters(mimeTypes);
+    if (fileDialog.exec() != QDialog::Accepted)
+        return;
+    std::string dest = fileDialog.selectedFiles().first().toStdString();
+    if(buf.size()) {
+        GifWriter g;
+        int width = buf[0].width(), height = buf[0].height();
+        GifBegin(&g, dest.data(), width, height, 1);
+        for(auto& img: buf) {
+            GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), 3);
         }
+        GifEnd(&g);
     }
 }

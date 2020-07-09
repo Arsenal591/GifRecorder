@@ -22,6 +22,8 @@ private slots:
     void on_recordButton_clicked();
     void on_timer_fired();
 
+    void on_saveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;
