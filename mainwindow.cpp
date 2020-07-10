@@ -66,6 +66,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev) {
         if(resizeType == ResizeBottom || resizeType == ResizeBottomLeft || resizeType == ResizeBottomRight) {
             geo.setBottom(coord.y());
         }
+        if(resizeType == ResizeDrag) {
+            auto newPos = ev->globalPos();
+            geo.translate(newPos.x() - previousPos.x(), newPos.y() - previousPos.y());
+            previousPos = newPos;
+        }
         this->setGeometry(geo);
     }
 
@@ -74,6 +79,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev) {
 void MainWindow::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         resizeType = calculateCursorPosition(ev->pos());
+        previousPos = ev->globalPos();
     }
 }
 

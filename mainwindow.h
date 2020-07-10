@@ -47,5 +47,6 @@ private:
 
     ResizeType calculateCursorPosition(const QPoint& pos);
     ResizeType resizeType;
+    QPoint previousPos;
 };
 #endif // MAINWINDOW_H
