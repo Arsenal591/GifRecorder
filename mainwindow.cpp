@@ -152,11 +152,11 @@ ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
     } if(onRight && onBottom){
         return ResizeBottomRight;
     } if(onLeft) {
-        return ResizeLeft;
+        return ResizeDrag;
     } if(onRight) {
         return ResizeRight;
     } if(onTop) {
-        return ResizeTop;
+        return ResizeDrag;
     } if(onBottom) {
         return ResizeBottom;
     }
