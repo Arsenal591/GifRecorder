@@ -101,6 +101,7 @@ void MainWindow::on_timer_fired() {
 
     auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
     buf.push_back(pixmap);
+    ui->progessText->setText(QString::asprintf("Frame %d", buf.size()));
 }
 
 
