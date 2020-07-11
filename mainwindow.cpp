@@ -4,6 +4,7 @@
 #include "qevent.h"
 #include "qfiledialog.h"
 #include "qimagewriter.h"
+#include "qprogressdialog.h"
 #include "qscreen.h"
 #include "qstandardpaths.h"
 #include "qtimer.h"
@@ -135,11 +136,18 @@ void MainWindow::on_saveButton_clicked()
     if(buf.size()) {
         GifWriter g;
         int width = buf[0].width(), height = buf[0].height();
+        QProgressDialog dia("Saving...", "", 0, buf.size() + 1, this);
+        dia.show();
         GifBegin(&g, dest.data(), width, height, 1);
+        int idx = 0;
         for(auto& img: buf) {
+            idx += 1;
             GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), 3);
+            dia.setValue(idx);
+            QCoreApplication::processEvents();
         }
         GifEnd(&g);
+        dia.setValue(buf.size() + 1);
     }
 }
 
