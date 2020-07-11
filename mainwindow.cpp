@@ -4,10 +4,10 @@
 #include "qevent.h"
 #include "qfiledialog.h"
 #include "qimagewriter.h"
-#include "qtimer.h"
-#include "qwindow.h"
 #include "qscreen.h"
 #include "qstandardpaths.h"
+#include "qtimer.h"
+#include "qwindow.h"
 
 #include "gif.h"
 
