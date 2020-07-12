@@ -31,9 +31,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent* ev) {
     auto mainRegion = QRegion(this->rect());
-    auto cameraSize = ui->camera->size();
-    auto cameraPos = ui->camera->mapToParent(ui->camera->pos());
-    auto cameraRegion = QRegion(QRect(cameraPos, cameraSize));
+    auto cameraRegion = QRegion(ui->camera->geometry());
     this->setMask(mainRegion.subtracted(cameraRegion));
 }
 
