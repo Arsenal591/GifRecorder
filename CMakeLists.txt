@@ -26,6 +26,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 include_directories(3rd/gif)
+include_directories(3rd/magick/include)
 
 if(ANDROID)
   add_library(GifRecorder SHARED
@@ -55,4 +56,4 @@ else()
   )
 endif()
 
-target_link_libraries(GifRecorder PRIVATE Qt5::Widgets)
+target_link_libraries(GifRecorder PRIVATE Qt5::Widgets "${CMAKE_CURRENT_SOURCE_DIR}/3rd/magick/lib/CORE_RL_Magick++_.lib")
