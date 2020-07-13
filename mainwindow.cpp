@@ -106,13 +106,17 @@ void MainWindow::on_timer_fired() {
 void MainWindow::on_recordButton_clicked()
 {
     if(timer == nullptr) {
+        ui->editButton->setEnabled(false);
+        ui->saveButton->setEnabled(false);
         timer = new QTimer(this);
         timer->setTimerType(Qt::PreciseTimer);
         connect(timer, &QTimer::timeout, this, &MainWindow::on_timer_fired);
         timer->start(33);
     } else {
+        ui->editButton->setEnabled(true);
+        ui->saveButton->setEnabled(true);
         delete timer;
-
+        timer = nullptr;
     }
 }
 
