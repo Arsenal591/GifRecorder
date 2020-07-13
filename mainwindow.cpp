@@ -29,10 +29,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto newAction = new QAction("New file", this);
     connect(newAction, &QAction::triggered, this, &MainWindow::clearBuffer);
-
     auto* menu = new QMenu(this);
     menu->addAction(newAction);
     ui->menuButton->setMenu(menu);
+
+    auto icon = QApplication::style()->standardIcon(QStyle::SP_TitleBarCloseButton);
+    ui->closeButton->setIcon(icon);
 }
 
 MainWindow::~MainWindow()
@@ -210,4 +212,9 @@ void MainWindow::on_menuButton_clicked()
 void MainWindow::clearBuffer() {
     this->buf.clear();
     this->ui->progessText->setText("");
+}
+
+void MainWindow::on_closeButton_clicked()
+{
+    QCoreApplication::quit();
 }

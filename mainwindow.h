@@ -49,6 +49,8 @@ private slots:
 
     void on_menuButton_clicked();
 
+    void on_closeButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;
