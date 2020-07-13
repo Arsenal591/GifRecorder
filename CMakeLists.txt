@@ -35,6 +35,9 @@ if(ANDROID)
     mainwindow.ui
     silentwidget.h
     silentwidget.cpp
+    settingsdialog.h
+    settingsdialog.cpp
+    settingsdialog.ui
     3rd/gif/gif.h
   )
 else()
@@ -45,6 +48,9 @@ else()
     mainwindow.ui
     silentwidget.h
     silentwidget.cpp
+    settingsdialog.h
+    settingsdialog.cpp
+    settingsdialog.ui
     3rd/gif/gif.h
   )
 endif()

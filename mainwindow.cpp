@@ -1,3 +1,4 @@
+#include "qcombobox.h"
 #include "qdatetime.h"
 #include "qdebug.h"
 #include "qdir.h"
@@ -12,12 +13,13 @@
 
 #include "gif.h"
 
+#include "settingsdialog.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent, Qt::WindowStaysOnTopHint)
-    , ui(new Ui::MainWindow), timer(nullptr), resizeType(ResizeNone)
+    , ui(new Ui::MainWindow), timer(nullptr), resizeType(ResizeNone), settings(Settings())
 {
     ui->setupUi(this);
     setMouseTracking(true);
@@ -111,7 +113,7 @@ void MainWindow::on_recordButton_clicked()
         timer = new QTimer(this);
         timer->setTimerType(Qt::PreciseTimer);
         connect(timer, &QTimer::timeout, this, &MainWindow::on_timer_fired);
-        timer->start(33);
+        timer->start(settings.fps);
     } else {
         ui->editButton->setEnabled(true);
         ui->saveButton->setEnabled(true);
@@ -145,7 +147,7 @@ void MainWindow::on_saveButton_clicked()
         int idx = 0;
         for(auto& img: buf) {
             idx += 1;
-            GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), 3);
+            GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), settings.fps/10);
             dia.setValue(idx);
             QCoreApplication::processEvents();
         }
@@ -178,4 +180,11 @@ ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
         return ResizeBottom;
     }
     return ResizeDrag;
+}
+
+void MainWindow::on_settingsButton_clicked()
+{
+    SettingsDialog dialog;
+    dialog.exec();
+    settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
 }

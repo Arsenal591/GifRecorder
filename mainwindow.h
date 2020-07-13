@@ -20,6 +20,11 @@ enum ResizeType {
     ResizeNone,
 };
 
+struct Settings {
+    int fps;
+    Settings(): fps(30) {}
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -40,6 +45,8 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_settingsButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;
@@ -48,5 +55,6 @@ private:
     ResizeType calculateCursorPosition(const QPoint& pos);
     ResizeType resizeType;
     QPoint previousPos;
+    Settings settings;
 };
 #endif // MAINWINDOW_H
