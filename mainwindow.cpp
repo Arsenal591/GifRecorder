@@ -162,7 +162,11 @@ void MainWindow::on_saveButton_clicked()
         int idx = 0;
         for(auto& img: buf) {
             idx += 1;
-            GifWriteFrame(&g, img.toImage().convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), settings.fps/10);
+            auto processedImg = img.toImage();
+            if(settings.color == "GrayScale") {
+                processedImg = processedImg.convertToFormat(QImage::Format_Grayscale8);
+            }
+            GifWriteFrame(&g, processedImg.convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), settings.fps/10);
             dia.setValue(idx);
             QCoreApplication::processEvents();
         }
@@ -202,6 +206,7 @@ void MainWindow::on_settingsButton_clicked()
     SettingsDialog dialog;
     dialog.exec();
     settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
+    settings.color = dialog.findChild<QComboBox*>("colorCombo")->currentText().toStdString();
 }
 
 void MainWindow::on_menuButton_clicked()

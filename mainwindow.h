@@ -22,7 +22,8 @@ enum ResizeType {
 
 struct Settings {
     int fps;
-    Settings(): fps(30) {}
+    std::string color;
+    Settings(): fps(33), color("RGB") {}
 };
 
 class MainWindow : public QMainWindow
