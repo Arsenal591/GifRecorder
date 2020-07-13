@@ -56,4 +56,4 @@ else()
   )
 endif()
 
-target_link_libraries(GifRecorder PRIVATE Qt5::Widgets "${CMAKE_CURRENT_SOURCE_DIR}/3rd/magick/lib/CORE_RL_Magick++_.lib")
+target_link_libraries(GifRecorder PRIVATE Qt5::Widgets "${CMAKE_CURRENT_SOURCE_DIR}/3rd/magick/lib/CORE_RL_MagickCore_.lib" "${CMAKE_CURRENT_SOURCE_DIR}/3rd/magick/lib/CORE_RL_Magick++_.lib" "${CMAKE_CURRENT_SOURCE_DIR}/3rd/magick/lib/CORE_RL_MagickWand_.lib" )

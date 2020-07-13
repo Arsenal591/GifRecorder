@@ -14,6 +14,7 @@
 #include "qwindow.h"
 
 #include "gif.h"
+#include "Magick++.h"
 
 #include "settingsdialog.h"
 #include "mainwindow.h"
@@ -154,23 +155,40 @@ void MainWindow::on_saveButton_clicked()
         return;
     std::string dest = fileDialog.selectedFiles().first().toStdString();
     if(buf.size()) {
-        GifWriter g;
-        int width = buf[0].width(), height = buf[0].height();
         QProgressDialog dia("Saving...", "", 0, buf.size() + 1, this);
         dia.show();
-        GifBegin(&g, dest.data(), width, height, 1);
+
+        std::vector<Magick::Image> frames;
         int idx = 0;
-        for(auto& img: buf) {
+        for(auto& pixmap: buf) {
             idx += 1;
-            auto processedImg = img.toImage();
+            auto img = pixmap.toImage();
             if(settings.color == "GrayScale") {
-                processedImg = processedImg.convertToFormat(QImage::Format_Grayscale8);
+                img = img.convertToFormat(QImage::Format_Grayscale8);
             }
-            GifWriteFrame(&g, processedImg.convertToFormat(QImage::Format_RGBA8888).bits(), img.width(), img.height(), settings.fps/10);
+            img = img.convertToFormat(QImage::Format_RGB888);
+
+            int width = img.width(), height = img.height();
+            Magick::Image frame(Magick::Geometry(width, height), Magick::ColorRGB(0, 0, 0));
+            auto pixels = frame.setPixels(0, 0, width, height);
+            frame.modifyImage();
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    QColor pix = img.pixel(x, y);
+                    auto offset = frame.channels() * (frame.columns() * y + x);
+                    pixels[offset] = pix.redF() * 65536 ;
+                    pixels[offset + 1] = pix.greenF() * 65536;
+                    pixels[offset + 2] = pix.blueF() * 65536;
+                }
+            }
+            frame.syncPixels();
+            frame.animationDelay(settings.fps);
+            frames.push_back(frame);
+
             dia.setValue(idx);
             QCoreApplication::processEvents();
         }
-        GifEnd(&g);
+        Magick::writeImages(frames.begin(), frames.end(), dest);
         dia.setValue(buf.size() + 1);
     }
 }
