@@ -1,3 +1,4 @@
+#include "qaction.h"
 #include "qcombobox.h"
 #include "qdatetime.h"
 #include "qdebug.h"
@@ -5,6 +6,7 @@
 #include "qevent.h"
 #include "qfiledialog.h"
 #include "qimagewriter.h"
+#include "qmenu.h"
 #include "qprogressdialog.h"
 #include "qscreen.h"
 #include "qstandardpaths.h"
@@ -24,12 +26,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
+
+    auto newAction = new QAction("New file", this);
+    connect(newAction, &QAction::triggered, this, &MainWindow::clearBuffer);
+
+    auto* menu = new QMenu(this);
+    menu->addAction(newAction);
+    ui->menuButton->setMenu(menu);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
 
 void MainWindow::paintEvent(QPaintEvent* ev) {
     auto mainRegion = QRegion(this->rect());
@@ -110,6 +121,7 @@ void MainWindow::on_recordButton_clicked()
     if(timer == nullptr) {
         ui->editButton->setEnabled(false);
         ui->saveButton->setEnabled(false);
+        ui->menuButton->setEnabled(false);
         timer = new QTimer(this);
         timer->setTimerType(Qt::PreciseTimer);
         connect(timer, &QTimer::timeout, this, &MainWindow::on_timer_fired);
@@ -117,6 +129,7 @@ void MainWindow::on_recordButton_clicked()
     } else {
         ui->editButton->setEnabled(true);
         ui->saveButton->setEnabled(true);
+        ui->menuButton->setEnabled(true);
         delete timer;
         timer = nullptr;
     }
@@ -187,4 +200,14 @@ void MainWindow::on_settingsButton_clicked()
     SettingsDialog dialog;
     dialog.exec();
     settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
+}
+
+void MainWindow::on_menuButton_clicked()
+{
+    ui->menuButton->showMenu();
+}
+
+void MainWindow::clearBuffer() {
+    this->buf.clear();
+    this->ui->progessText->setText("");
 }

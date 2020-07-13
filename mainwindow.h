@@ -47,14 +47,17 @@ private slots:
 
     void on_settingsButton_clicked();
 
+    void on_menuButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;
     QVector<QPixmap> buf;
-
-    ResizeType calculateCursorPosition(const QPoint& pos);
     ResizeType resizeType;
     QPoint previousPos;
     Settings settings;
+
+    ResizeType calculateCursorPosition(const QPoint& pos);
+    void clearBuffer();
 };
 #endif // MAINWINDOW_H
