@@ -126,7 +126,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="SilentWidget" name="widget" native="true">
+         <widget class="SilentWidget" name="buttonContainer" native="true">
           <property name="styleSheet">
            <string notr="true"/>
           </property>
