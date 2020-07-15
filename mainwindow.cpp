@@ -28,9 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     for(auto& child : this->findChildren<QWidget*>()) {
         child->installEventFilter(this);
     }
-    
-    setMouseTracking(true);
-    ui->centralwidget->setMouseTracking(true);
 
     auto newAction = new QAction("New file", this);
     connect(newAction, &QAction::triggered, this, &MainWindow::clearBuffer);
