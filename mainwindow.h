@@ -39,6 +39,7 @@ protected:
     void mouseMoveEvent(QMouseEvent*) override;
     void mousePressEvent(QMouseEvent*) override;
     void mouseReleaseEvent(QMouseEvent*) override;
+    bool eventFilter(QObject *obj, QEvent *ev) override;
 
 private slots:
     void on_recordButton_clicked();

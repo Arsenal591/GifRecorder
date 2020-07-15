@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), timer(nullptr), resizeType(ResizeNone), settings(Settings())
 {
     ui->setupUi(this);
+    for(auto& child : this->findChildren<QWidget*>()) {
+        child->installEventFilter(this);
+    }
+    
     setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
 
@@ -241,4 +245,11 @@ void MainWindow::clearBuffer() {
 void MainWindow::on_closeButton_clicked()
 {
     QCoreApplication::quit();
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev) {
+    if(obj != ui->centralwidget) {
+        setCursor(Qt::ArrowCursor);
+    }
+    return false;
 }
