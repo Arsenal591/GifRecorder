@@ -188,6 +188,7 @@ void MainWindow::on_saveButton_clicked()
             dia.setValue(idx);
             QCoreApplication::processEvents();
         }
+        Magick::optimizeTransparency(frames.begin(), frames.end());
         Magick::writeImages(frames.begin(), frames.end(), dest);
         dia.setValue(buf.size() + 1);
     }
