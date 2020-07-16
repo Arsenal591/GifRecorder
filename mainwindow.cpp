@@ -129,7 +129,7 @@ void MainWindow::on_recordButton_clicked()
         timer = new QTimer(this);
         timer->setTimerType(Qt::PreciseTimer);
         connect(timer, &QTimer::timeout, this, &MainWindow::on_timer_fired);
-        timer->start(settings.fps);
+        timer->start(1000 / settings.fps);
     } else {
         ui->editButton->setEnabled(true);
         ui->saveButton->setEnabled(true);
@@ -183,7 +183,6 @@ void MainWindow::on_saveButton_clicked()
                 }
             }
             frame.syncPixels();
-            frame.animationDelay(settings.fps);
             frames.push_back(frame);
 
             dia.setValue(idx);
