@@ -116,7 +116,7 @@ void MainWindow::on_timer_fired() {
 
     auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
     buf.push_back(pixmap);
-    ui->progessText->setText(QString::asprintf("Frame %d", buf.size()));
+    ui->progessText->setText(QString::asprintf("Frame %d", buf.size() + 1));
 }
 
 
@@ -236,7 +236,7 @@ void MainWindow::on_menuButton_clicked()
 
 void MainWindow::clearBuffer() {
     this->buf.clear();
-    this->ui->progessText->setText("");
+    this->ui->progessText->setText("Frame 0");
 }
 
 void MainWindow::on_closeButton_clicked()
