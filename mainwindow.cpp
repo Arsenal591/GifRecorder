@@ -117,7 +117,7 @@ void MainWindow::on_timer_fired() {
 
     auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
     buf.push_back(pixmap);
-    ui->progessText->setText(QString::asprintf("Frame %d", buf.size() + 1));
+    ui->progessText->setText(QString::asprintf("Frame %d", buf.size()));
 }
 
 
@@ -224,9 +224,10 @@ ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
 void MainWindow::on_settingsButton_clicked()
 {
     SettingsDialog dialog;
-    dialog.exec();
-    settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
-    settings.color = dialog.findChild<QComboBox*>("colorCombo")->currentText().toStdString();
+    if(dialog.exec() == QDialog::Accepted) {
+        settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
+        settings.color = dialog.findChild<QComboBox*>("colorCombo")->currentText().toStdString();
+    }
 }
 
 void MainWindow::on_menuButton_clicked()
