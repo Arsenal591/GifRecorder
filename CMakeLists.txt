@@ -39,6 +39,9 @@ if(ANDROID)
     settingsdialog.h
     settingsdialog.cpp
     settingsdialog.ui
+    editdialog.h
+    editdialog.cpp
+    editdialog.ui
     3rd/gif/gif.h
   )
 else()
@@ -52,6 +55,9 @@ else()
     settingsdialog.h
     settingsdialog.cpp
     settingsdialog.ui
+    editdialog.h
+    editdialog.cpp
+    editdialog.ui
     3rd/gif/gif.h
   )
 endif()

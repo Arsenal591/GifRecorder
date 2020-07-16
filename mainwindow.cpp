@@ -16,6 +16,7 @@
 #include "gif.h"
 #include "Magick++.h"
 
+#include "editdialog.h"
 #include "settingsdialog.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -248,4 +249,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev) {
         setCursor(Qt::ArrowCursor);
     }
     return false;
+}
+
+void MainWindow::on_editButton_clicked()
+{
+    EditDialog dialog(this, this->buf);
+    if(dialog.exec() == QDialog::Accepted) {
+
+    }
 }

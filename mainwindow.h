@@ -44,14 +44,11 @@ protected:
 private slots:
     void on_recordButton_clicked();
     void on_timer_fired();
-
     void on_saveButton_clicked();
-
     void on_settingsButton_clicked();
-
     void on_menuButton_clicked();
-
     void on_closeButton_clicked();
+    void on_editButton_clicked();
 
 private:
     Ui::MainWindow *ui;
