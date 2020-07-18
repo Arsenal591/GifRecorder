@@ -1,3 +1,6 @@
+#include "qaction.h"
+#include "qmenu.h"
+
 #include "editdialog.h"
 #include "ui_editdialog.h"
 
@@ -22,10 +25,17 @@ void EditDialog::setIndex(int idx) {
 
     if(idx < images.size()) {
         ui->displayedImage->setPixmap(this->images[idx]);
+    } else {
+        ui->displayedImage->clear();
     }
     ui->goPreviousButton->setEnabled(idx > 0);
     ui->goNextButton->setEnabled(idx < this->images.size() - 1);
     this->setWindowTitle(QString::asprintf("Edit frame %d", idx + 1));
+}
+
+void EditDialog::removeCurrent() {
+    this->images.remove(this->idx);
+    this->setIndex(this->idx);
 }
 
 void EditDialog::on_goPreviousButton_clicked()
@@ -36,4 +46,16 @@ void EditDialog::on_goPreviousButton_clicked()
 void EditDialog::on_goNextButton_clicked()
 {
     this->setIndex(this->idx + 1);
+}
+
+void EditDialog::on_displayedImage_customContextMenuRequested(const QPoint &pos)
+{
+    if(this->images.empty()) return;
+    QMenu contextMenu(this);
+
+    QAction action1("Delete frame", this);
+    connect(&action1, &QAction::triggered, this, &EditDialog::removeCurrent);
+    contextMenu.addAction(&action1);
+
+    contextMenu.exec(mapToGlobal(pos));
 }

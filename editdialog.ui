@@ -20,6 +20,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
        <item>
         <widget class="QLabel" name="displayedImage">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
          <property name="text">
           <string/>
          </property>

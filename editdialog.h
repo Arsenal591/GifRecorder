@@ -20,11 +20,14 @@ private slots:
 
     void on_goNextButton_clicked();
 
+    void on_displayedImage_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::EditDialog *ui;
     QVector<QPixmap>& images;
     int idx;
     void setIndex(int);
+    void removeCurrent();
 };
 
 #endif // EDITDIALOG_H
