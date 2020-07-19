@@ -104,22 +104,12 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *ev) {
     resizeType = ResizeNone;
 }
 
-void MainWindow::on_timer_fired() {
-    QScreen *screen = QGuiApplication::primaryScreen();
-    if (const QWindow *window = windowHandle())
-        screen = this->windowHandle()->screen();
-    if (!screen)
-    {
-        return;
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev) {
+    if(obj != ui->centralwidget) {
+        setCursor(Qt::ArrowCursor);
     }
-    auto cameraPos = this->mapToGlobal(ui->camera->pos());
-    auto cameraSize = ui->camera->size();
-
-    auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
-    buf.push_back(pixmap);
-    ui->progessText->setText(QString::asprintf("Frame %d", buf.size()));
+    return false;
 }
-
 
 void MainWindow::on_recordButton_clicked()
 {
@@ -138,6 +128,22 @@ void MainWindow::on_recordButton_clicked()
         delete timer;
         timer = nullptr;
     }
+}
+
+void MainWindow::on_timer_fired() {
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (const QWindow *window = windowHandle())
+        screen = this->windowHandle()->screen();
+    if (!screen)
+    {
+        return;
+    }
+    auto cameraPos = this->mapToGlobal(ui->camera->pos());
+    auto cameraSize = ui->camera->size();
+
+    auto pixmap = screen->grabWindow(0, cameraPos.x(), cameraPos.y(), cameraSize.width(), cameraSize.height());
+    buf.push_back(pixmap);
+    ui->progessText->setText(QString::asprintf("Frame %d", buf.size()));
 }
 
 void MainWindow::on_saveButton_clicked()
@@ -195,6 +201,33 @@ void MainWindow::on_saveButton_clicked()
     }
 }
 
+void MainWindow::on_settingsButton_clicked()
+{
+    SettingsDialog dialog;
+    if(dialog.exec() == QDialog::Accepted) {
+        settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
+        settings.color = dialog.findChild<QComboBox*>("colorCombo")->currentText().toStdString();
+    }
+}
+
+void MainWindow::on_menuButton_clicked()
+{
+    ui->menuButton->showMenu();
+}
+
+void MainWindow::on_closeButton_clicked()
+{
+    QCoreApplication::quit();
+}
+
+void MainWindow::on_editButton_clicked()
+{
+    EditDialog dialog(this, this->buf);
+    if(dialog.exec() == QDialog::Accepted) {
+        this->buf = dialog.getImages();
+    }
+}
+
 ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
     const int r = 10;
     bool onLeft = pos.x() <= r;
@@ -221,41 +254,7 @@ ResizeType MainWindow::calculateCursorPosition(const QPoint& pos) {
     return ResizeDrag;
 }
 
-void MainWindow::on_settingsButton_clicked()
-{
-    SettingsDialog dialog;
-    if(dialog.exec() == QDialog::Accepted) {
-        settings.fps = dialog.findChild<QComboBox*>("fpsCombo")->currentText().toInt();
-        settings.color = dialog.findChild<QComboBox*>("colorCombo")->currentText().toStdString();
-    }
-}
-
-void MainWindow::on_menuButton_clicked()
-{
-    ui->menuButton->showMenu();
-}
-
 void MainWindow::clearBuffer() {
     this->buf.clear();
     this->ui->progessText->setText("Frame 0");
-}
-
-void MainWindow::on_closeButton_clicked()
-{
-    QCoreApplication::quit();
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *ev) {
-    if(obj != ui->centralwidget) {
-        setCursor(Qt::ArrowCursor);
-    }
-    return false;
-}
-
-void MainWindow::on_editButton_clicked()
-{
-    EditDialog dialog(this, this->buf);
-    if(dialog.exec() == QDialog::Accepted) {
-        this->buf = dialog.getImages();
-    }
 }
