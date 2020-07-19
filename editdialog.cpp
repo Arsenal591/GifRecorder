@@ -30,7 +30,7 @@ void EditDialog::setIndex(int idx) {
     }
     ui->goPreviousButton->setEnabled(idx > 0);
     ui->goNextButton->setEnabled(idx < this->images.size() - 1);
-    this->setWindowTitle(QString::asprintf("Edit frame %d", idx + 1));
+    this->setWindowTitle(QString::asprintf("Edit frame %d/%d", idx + 1, this->images.size()));
 }
 
 void EditDialog::removeCurrent() {
