@@ -14,6 +14,7 @@ class EditDialog : public QDialog
 public:
     explicit EditDialog(QWidget *parent, QVector<QPixmap>& images);
     ~EditDialog();
+    QVector<QPixmap> getImages();
 
 private slots:
     void on_goPreviousButton_clicked();

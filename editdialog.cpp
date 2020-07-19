@@ -18,6 +18,10 @@ EditDialog::~EditDialog()
     delete ui;
 }
 
+QVector<QPixmap> EditDialog::getImages() {
+    return QVector<QPixmap>(this->images);
+}
+
 void EditDialog::setIndex(int idx) {
     if(idx < 0) idx = 0;
     if(!this->images.empty() && idx >= this->images.size()) idx = this->images.size() - 1;

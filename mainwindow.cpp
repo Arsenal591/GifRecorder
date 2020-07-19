@@ -256,6 +256,6 @@ void MainWindow::on_editButton_clicked()
 {
     EditDialog dialog(this, this->buf);
     if(dialog.exec() == QDialog::Accepted) {
-
+        this->buf = dialog.getImages();
     }
 }
