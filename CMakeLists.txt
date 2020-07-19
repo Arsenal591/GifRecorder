@@ -45,7 +45,7 @@ if(ANDROID)
     3rd/gif/gif.h
   )
 else()
-  add_executable(GifRecorder
+  add_executable(GifRecorder WIN32
     main.cpp
     mainwindow.cpp
     mainwindow.h
