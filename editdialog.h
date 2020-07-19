@@ -23,10 +23,15 @@ private slots:
 
     void on_displayedImage_customContextMenuRequested(const QPoint &pos);
 
+    void on_heightEdit_textChanged(const QString &arg1);
+
+    void on_widthEdit_textEdited(const QString &arg1);
+
 private:
     Ui::EditDialog *ui;
     QVector<QPixmap>& images;
     int idx;
+    QSize size;
     void setIndex(int);
     void removeCurrent();
 };

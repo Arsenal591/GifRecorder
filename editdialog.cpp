@@ -1,5 +1,6 @@
 #include "qaction.h"
 #include "qmenu.h"
+#include "qdebug.h"
 
 #include "editdialog.h"
 #include "ui_editdialog.h"
@@ -10,7 +11,16 @@ EditDialog::EditDialog(QWidget *parent, QVector<QPixmap>& images) :
     images(images)
 {
     ui->setupUi(this);
-    this->setIndex(0);
+    if(!images.empty()) {
+        this->size = images[0].size();
+        ui->widthEdit->setText(QString::number(this->size.width()));
+        ui->heightEdit->setText(QString::number(this->size.height()));
+        ui->keepRatioCheck->setChecked(true);
+    } else {
+        ui->widthEdit->setEnabled(false);
+        ui->heightEdit->setEnabled(false);
+        ui->keepRatioCheck->setEnabled(false);
+    }
 }
 
 EditDialog::~EditDialog()
@@ -23,12 +33,15 @@ QVector<QPixmap> EditDialog::getImages() {
 }
 
 void EditDialog::setIndex(int idx) {
+
     if(idx < 0) idx = 0;
     if(!this->images.empty() && idx >= this->images.size()) idx = this->images.size() - 1;
     this->idx = idx;
 
     if(idx < images.size()) {
-        ui->displayedImage->setPixmap(this->images[idx]);
+        auto pixmap = this->images[idx].scaled(this->size);
+        pixmap = pixmap.scaled(ui->displayedImage->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        ui->displayedImage->setPixmap(pixmap);
     } else {
         ui->displayedImage->clear();
     }
@@ -62,4 +75,28 @@ void EditDialog::on_displayedImage_customContextMenuRequested(const QPoint &pos)
     contextMenu.addAction(&action1);
 
     contextMenu.exec(mapToGlobal(pos));
+}
+
+void EditDialog::on_heightEdit_textChanged(const QString &arg1)
+{
+    if(ui->keepRatioCheck->isChecked()) {
+        this->size *= (1.0 * arg1.toInt() / this->size.height());
+    } else {
+        this->size.setHeight(arg1.toInt());
+    }
+    ui->widthEdit->setText(QString::number(this->size.width()));
+    ui->heightEdit->setText(QString::number(this->size.height()));
+    this->setIndex(this->idx);
+}
+
+void EditDialog::on_widthEdit_textEdited(const QString &arg1)
+{
+    if(ui->keepRatioCheck->isChecked()) {
+        this->size *= (1.0 * arg1.toInt() / this->size.width());
+    } else {
+        this->size.setWidth(arg1.toInt());
+    }
+    ui->widthEdit->setText(QString::number(this->size.width()));
+    ui->heightEdit->setText(QString::number(this->size.height()));
+    this->setIndex(this->idx);
 }
